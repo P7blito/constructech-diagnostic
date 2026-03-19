@@ -835,7 +835,7 @@ function ResultsScreen({ answers, contact, onRestart }) {
           Constructech Club accompagne les entreprises BTP dans l'automatisation de leur gestion administrative. 15 min pour voir si on peut vous aider.
         </p>
         <a
-          href="https://calendly.com/luca-constructech/30min"
+          href="https://calendly.com/construisonsensemble/echange-avec-diana-constructech-club"
           target="_blank"
           rel="noopener noreferrer"
           style={{
