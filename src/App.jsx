@@ -917,12 +917,36 @@ export default function App() {
     const totalScore = sectionScores.reduce((a, s) => a + s.score, 0);
     const totalPct = Math.round((totalScore / TOTAL_MAX) * 100);
 
+    // Build human-readable answers
+    const readableAnswers = SECTIONS.map((section) => {
+      const sectionData = sectionScores.find((s) => s.section === section.id);
+      const lines = section.questions.map((q) => {
+        const selectedScore = answers[q.id] ?? null;
+        const selectedOption = q.options.find((o) => o.score === selectedScore);
+        return `  ${q.text}\n  → ${selectedOption ? selectedOption.label : "Non répondu"} (${selectedScore ?? "-"}/3)`;
+      });
+      return `${section.icon} ${section.title} — ${sectionData.pct}%\n${lines.join("\n")}`;
+    }).join("\n\n");
+
+    const level = getLevel(totalPct);
+
     const payload = {
-      ...form,
-      score_total: totalPct,
-      scores_detail: JSON.stringify(sectionScores),
-      answers: JSON.stringify(answers),
       created_at: new Date().toISOString(),
+      nom: form.nom,
+      entreprise: form.entreprise,
+      email: form.email,
+      telephone: form.telephone || "",
+      taille: form.taille || "",
+      role: form.role || "",
+      score_total: totalPct,
+      niveau: level.label,
+      score_relation: sectionScores.find((s) => s.section === "relation").pct,
+      score_commande: sectionScores.find((s) => s.section === "commande").pct,
+      score_validation: sectionScores.find((s) => s.section === "validation").pct,
+      score_facturation: sectionScores.find((s) => s.section === "facturation").pct,
+      score_paiement: sectionScores.find((s) => s.section === "paiement").pct,
+      reponses_lisibles: readableAnswers,
+      reponses_json: JSON.stringify(answers),
     };
 
     // --- GOOGLE SHEETS INTEGRATION ---
